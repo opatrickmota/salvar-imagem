@@ -50,12 +50,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun savedImagePath(bitmap: Bitmap) {
-        val directory = File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Revistas")
+        val directory = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Revistas")
         if (!directory.exists()) {
             directory.mkdirs()
         }
 
-        val imageFileName = "capa-${Date()}.jpeg"
+        val imageFileName = "capa-${Date()}.jpeg".replace(":", "-")
 
         val imageFile = File(directory, imageFileName)
         try {
