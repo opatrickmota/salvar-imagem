@@ -1,22 +1,15 @@
 package com.patrickmota.pocimagem
 
 import android.R
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.drawToBitmap
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.patrickmota.pocimagem.databinding.MagazineListBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.withContext
-import java.io.IOException
-import java.net.URL
 
 class MagazineAdapter(
-    private val onItemClicked: (imageUrl: String) -> Unit
+    private val onItemClicked: (imageUrl: String) -> Unit,
+    private val onSharedImage: (imageUrl: String) -> Unit
 ) : RecyclerView.Adapter<MagazineAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: MagazineListBinding) : RecyclerView.ViewHolder(binding.root)
@@ -42,6 +35,10 @@ class MagazineAdapter(
 
                     downloadMagazine.setOnClickListener {
                         onItemClicked(imageUrl)
+                    }
+
+                    shareMagazine.setOnClickListener {
+                        onSharedImage(imageUrl)
                     }
                 }
             }
