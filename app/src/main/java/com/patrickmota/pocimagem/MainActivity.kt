@@ -1,14 +1,19 @@
 package com.patrickmota.pocimagem
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.patrickmota.pocimagem.databinding.ActivityMainBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.ByteArrayOutputStream
@@ -43,7 +48,23 @@ class MainActivity : AppCompatActivity() {
                             Toast.makeText(this, "Não é possivel baixar a imagem.", Toast.LENGTH_LONG).show()
                         }
                         else -> {
-                            savedImagePath(it)
+                            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                                if (ContextCompat.checkSelfPermission(
+                                        this,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                    ) != PackageManager.PERMISSION_GRANTED
+                                ) {
+                                    ActivityCompat.requestPermissions(
+                                        this,
+                                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                                        REQUEST_CODE_WRITE_EXTERNAL_STORAGE
+                                    )
+                                } else {
+                                    savedImagePath(it)
+                                }
+                            } else {
+                                savedImagePath(it)
+                            }
                         }
                     }
                 }
@@ -109,5 +130,9 @@ class MainActivity : AppCompatActivity() {
         val imageFileName = "capa-${Date()}.jpeg".replace(":", "-")
 
         return File(directory, imageFileName)
+    }
+
+    private companion object {
+        private const val REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 123
     }
 }
